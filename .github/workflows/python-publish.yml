@@ -6,7 +6,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Build and Deploy IMAPY
+name: Build and Deploy MEI_MTC_Parser
 
 on:
   push:
