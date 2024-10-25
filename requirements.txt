@@ -1,0 +1,4 @@
+music21==8.1.0
+verovio==3.14.0
+converter21==2.0.1
+IMAPY-music==0.1.6a0
