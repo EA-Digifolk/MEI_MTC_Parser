@@ -49,6 +49,7 @@ class MetricExtractor():
             features['beatstrength'] = self.get_beat_strength()
             features['metriccontour'] = self.get_metric_contour(
                 features['beatstrength'])
+            features['posinbar'] =  self.get_position_in_bar()
         except NoMeterError:
             features['timesignature'] = [None] * \
                 len(self.music_stream.recurse().notes)
@@ -61,8 +62,18 @@ class MetricExtractor():
                 len(self.music_stream.recurse().notes)
             features['metriccontour'] = [None] * \
                 len(self.music_stream.recurse().notes)
+            features['posinbar'] =  [None] * \
+                len(self.music_stream.recurse().notes)
 
         return features
+
+    def get_position_in_bar(self):
+        """
+        Get Position in Bar of each note
+        """
+        if not has_meter(self.music_stream):
+            raise NoMeterError('No meter found in stream')
+        return [n.offset/n.activeSite.barDuration.quarterLength for n in self.music_stream.recurse().notes]
 
     def get_time_signature(self):
         """
