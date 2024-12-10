@@ -165,6 +165,8 @@ class MTCExtractor():
                         features).get_all_features())
         features.update(LBDMExtractor(
             part, features).get_all_features())
+        
+        features.update({'lyrics': self.get_lyrics(part.flatten().notes)})
 
         return features
 
@@ -180,3 +182,11 @@ class MTCExtractor():
         """
         text = m21.text.assembleLyrics(self.music_stream)
         return 'Vocal' if text is not None else 'Instrumental'
+
+    def get_lyrics(self, notes):
+        """
+        Return Lyrics per Note
+        """
+        if not self.has_lyrics():
+            return [[] for _ in range(len(notes))] 
+        return [[(x.number, x.text, x.syllabic) for x in n.lyrics] for n in notes]
