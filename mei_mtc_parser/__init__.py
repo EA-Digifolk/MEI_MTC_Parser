@@ -253,6 +253,9 @@ class MeiParser:
             if retrieve == 'text':
                 text = str(element.text)
                 if isDigit(text):
+                  if isna(float(text)):
+                    return 0
+                  else:
                     return int(float(text))
                 if text.isspace() or text == 'None':
                     return None
