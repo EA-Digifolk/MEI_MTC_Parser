@@ -8,6 +8,8 @@ Created on Mon Feb 13 14:07:00 2023
 from collections import defaultdict
 from xml.etree import ElementTree as ET
 
+from pandas import isna
+
 from .mtc_extractor import MTCExtractor
 from .utils import isDigit
 
