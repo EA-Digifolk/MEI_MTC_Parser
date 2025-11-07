@@ -93,7 +93,7 @@ class PitchExtractor():
         try:
           key = key.replace(' Flat', '-').replace(' Sharp', '#')
 
-          if mode.lower() in list(m21.key.modeSharpsAlter.keys()):
+          if mode.lower().replace(' ','') in list(m21.key.modeSharpsAlter.keys()):
             return m21.key.Key(tonic=key, mode=mode.lower())
           else:
             if mode.lower().startswith('aeolian'):
