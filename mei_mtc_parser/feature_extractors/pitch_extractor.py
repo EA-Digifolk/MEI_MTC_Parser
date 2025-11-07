@@ -93,15 +93,15 @@ class PitchExtractor():
         try:
           key = key.replace(' Flat', '-').replace(' Sharp', '#')
 
-          if mode in list(m21.key.modeSharpsAlter.keys()):
-            return m21.key.Key(tonic=key, mode=mode)
+          if mode.lower() in list(m21.key.modeSharpsAlter.keys()):
+            return m21.key.Key(tonic=key, mode=mode.lower())
           else:
-            if mode.startswith('aeolian'):
+            if mode.lower().startswith('aeolian'):
               return m21.key.Key(tonic=key, mode='aeolian')
-            if mode.startswith('phrygian'):
+            if mode.lower().startswith('phrygian'):
               return m21.key.Key(tonic=key, mode='phrygian')       
 
-            print(f"Can't yet process {key} {mode}")       
+            print(f"Can't yet process {key} {mode.lower()}")       
             return m21.key.Key(tonic=key, mode='major')
         except:
           try:

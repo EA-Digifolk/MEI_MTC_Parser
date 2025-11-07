@@ -62,13 +62,21 @@ MEILINKS = {
         'region': './/mei:work//mei:term[@type="region"]',
         'district': './/mei:work//mei:term[@type="district"]',
         'city': './/mei:work//mei:term[@type="city"]',
+        'country': './/mei:workList//mei:term[@type="country"]',
+
+        'clean_lyrics': './/mei:workList//mei:term[@type="clean-lyrics"]',
+        'ngram': './/mei:workList//mei:term[@type="ngram"]',
+        'bigram': './/mei:workList//mei:term[@type="bigram"]',
+        'textual_topics': './/mei:workList//mei:term[@type="textual-topics"]',
     },
 
     'music': {
         'ambitus': './/mei:scoreDef//mei:ambitus//mei:ambNote',
-        'rhythm_pattern': './/mei:supplied[@type="rhythm pattern"]//mei:note',
+        'pitch_pattern': './/mei:supplied[@type="pitch pattern"]',
+        'interval_pattern': './/mei:supplied[@type="pitch pattern"]',
+        'rhythm_pattern': './/mei:supplied[@type="rhythm pattern"]',
         'phrases': './/mei:supplied[@type="phrases"]//mei:phrase',
-        'cadences': './/mei:note[@type]',
+        #'cadences': './/mei:note[@type]',
     }
 }
 
@@ -162,6 +170,7 @@ class MeiParser:
         - region
         - district
         - city
+        - textual topics
         """
         return self.get_dict(root, extraction_dict=MEILINKS['work'])
 
@@ -169,9 +178,10 @@ class MeiParser:
         """
         Returns a dictionary with the following information:
         - ambitus
+        - pitch_pattern
+        - interval_pattern
         - rhythm_pattern
         - phrases
-        - cadences
         """
         return self.get_dict(root, extraction_dict=MEILINKS['music'])
 
@@ -192,13 +202,15 @@ class MeiParser:
                     root, extraction_dict, output_dict, element, 'lowest')
                 self.extract_ambitus_note(
                     root, extraction_dict, output_dict, element, 'highest')
+            elif element == 'pitch_pattern':
+                #TODO
+                pass
+            elif element == 'interval_pattern':
+                #TODO
+                pass
             elif element == 'rhythm_pattern':
-                rhythm = self.get_multiple_elements(
-                    root, extraction_dict[element], 'dur')
-                if rhythm:
-                    output_dict[element] = ' '.join(rhythm)
-                else:
-                    output_dict[element] = None
+                #TODO
+                pass
             elif element == 'phrases':
                 output_dict[element] = self.extract_phrases(
                     root, extraction_dict, element)
