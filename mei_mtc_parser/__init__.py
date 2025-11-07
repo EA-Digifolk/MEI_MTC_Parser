@@ -56,7 +56,7 @@ MEILINKS = {
         'tempo': './/mei:work//mei:tempo',
         'sections': './/mei:work//mei:section//mei:measure',
         'language': './/mei:work//mei:language',
-        'complete_lyrics': './/mei:work//mei:notesStmt//mei:annot',
+        'performance_notes': './/mei:work//mei:notesStmt//mei:annot',
 
         'genre': './/mei:work//mei:term[@type="genre"]',
         'region': './/mei:work//mei:term[@type="region"]',
@@ -133,8 +133,8 @@ class MeiParser:
                     music_dict[key] = value[key]
         music_dict.update(music_metadata)
 
-        music_dict['type'] = self.mtc_extractor.has_lyrics() # type: ignore
-        music_dict['freemeter'] = not self.mtc_extractor.has_meter() # type: ignore
+        music_dict['has_lyrics?'] = self.mtc_extractor.has_lyrics() # type: ignore
+        music_dict['has_freemeter?'] = not self.mtc_extractor.has_meter() # type: ignore
 
         music_dict.update({'features': features}) # type: ignore
 
@@ -204,13 +204,13 @@ class MeiParser:
                     root, extraction_dict, output_dict, element, 'highest')
             elif element == 'pitch_pattern':
                 #TODO
-                pass
+                output_dict[element] = None
             elif element == 'interval_pattern':
                 #TODO
-                pass
+                output_dict[element] = None
             elif element == 'rhythm_pattern':
                 #TODO
-                pass
+                output_dict[element] = None
             elif element == 'phrases':
                 output_dict[element] = self.extract_phrases(
                     root, extraction_dict, element)
