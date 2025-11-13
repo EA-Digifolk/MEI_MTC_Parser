@@ -8,7 +8,7 @@ Created on Mon Feb 13 14:07:00 2023
 from collections import defaultdict
 from xml.etree import ElementTree as ET
 
-from pandas import isna
+import numpy as np
 
 from .mtc_extractor import MTCExtractor
 from .utils import isDigit
@@ -73,7 +73,7 @@ MEILINKS = {
     'music': {
         'ambitus': './/mei:scoreDef//mei:ambitus//mei:ambNote',
         'pitch_pattern': './/mei:supplied[@type="pitch pattern"]',
-        'interval_pattern': './/mei:supplied[@type="pitch pattern"]',
+        'interval_pattern': './/mei:supplied[@type="interval pattern"]',
         'rhythm_pattern': './/mei:supplied[@type="rhythm pattern"]',
         'phrases': './/mei:supplied[@type="phrases"]//mei:phrase',
         #'cadences': './/mei:note[@type]',
@@ -101,7 +101,7 @@ class MeiParser:
         music = self.get_music_info(root)
 
         music_metadata = music
-        for key in ['key', 'mode', 'meter', 'tempo', 'genre']:
+        for key in ['key', 'mode', 'meter', 'tempo', 'genre', 'ngram', 'bigram', 'textual_topics']:
             music_metadata[key] = work[key]
 
         if verbose:
@@ -203,14 +203,11 @@ class MeiParser:
                 self.extract_ambitus_note(
                     root, extraction_dict, output_dict, element, 'highest')
             elif element == 'pitch_pattern':
-                #TODO
-                output_dict[element] = None
+                output_dict[element] = self.extract_patterns(root, extraction_dict, element)
             elif element == 'interval_pattern':
-                #TODO
-                output_dict[element] = None
+                output_dict[element] = self.extract_patterns(root, extraction_dict, element)
             elif element == 'rhythm_pattern':
-                #TODO
-                output_dict[element] = None
+                output_dict[element] = self.extract_patterns(root, extraction_dict, element)
             elif element == 'phrases':
                 output_dict[element] = self.extract_phrases(
                     root, extraction_dict, element)
@@ -221,7 +218,20 @@ class MeiParser:
             if element == 'key':
                 output_dict['mode'] = self.get_element(
                     root, extraction_dict[element], 'mode')
+            if element == 'textual_topics' and isinstance(output_dict[element], str):
+                output_dict[element] = output_dict[element].split('; ')
         return output_dict
+
+    def extract_patterns(self, root, extraction_dict, element):
+        """
+        Extracts the
+        """
+        histogram_dict = self.get_histogram(root, extraction_dict[element])
+        hist = [(int(key.replace('pc_','').replace('intm_','').replace('bin_','')), float(val)) for key, val in histogram_dict.items() if any(x in key for x in ['pc_', 'intm_', 'bin_'])]
+
+        ret_dict = {key:val for key, val in histogram_dict.items() if not any(x in key for x in ['pc_', 'intm_', 'bin_'])}
+        ret_dict['histogram'] = [x[1] for x in sorted(hist)]
+        return ret_dict
 
     def extract_phrases(self, root, extraction_dict, element):
         """
@@ -267,7 +277,7 @@ class MeiParser:
             if retrieve == 'text':
                 text = str(element.text)
                 if isDigit(text):
-                  if isna(float(text)):
+                  if np.isnan(float(text)):
                     return 0
                   else:
                     return int(float(text))
@@ -276,6 +286,16 @@ class MeiParser:
                 return text
             else:
                 return element.attrib[retrieve]
+        else:
+            return None
+
+    def get_histogram(self, root, xpath):
+        """
+        Returns the text of an element given its xpath.
+        """
+        element = root.find(xpath + '//mei:histogram', NAME_SPACE)
+        if element is not None:
+            return element.attrib
         else:
             return None
 
