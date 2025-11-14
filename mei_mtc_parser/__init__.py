@@ -226,12 +226,15 @@ class MeiParser:
         """
         Extracts the
         """
-        histogram_dict = self.get_histogram(root, extraction_dict[element])
-        hist = [(int(key.replace('pc_','').replace('intm_','').replace('bin_','')), float(val)) for key, val in histogram_dict.items() if any(x in key for x in ['pc_', 'intm_', 'bin_'])]
+        try:
+            histogram_dict = self.get_histogram(root, extraction_dict[element])
+            hist = [(int(key.replace('pc_','').replace('intm_','').replace('bin_','')), float(val)) for key, val in histogram_dict.items() if any(x in key for x in ['pc_', 'intm_', 'bin_'])]
 
-        ret_dict = {key:val for key, val in histogram_dict.items() if not any(x in key for x in ['pc_', 'intm_', 'bin_'])}
-        ret_dict['histogram'] = [x[1] for x in sorted(hist)]
-        return ret_dict
+            ret_dict = {key:val for key, val in histogram_dict.items() if not any(x in key for x in ['pc_', 'intm_', 'bin_'])}
+            ret_dict['histogram'] = [x[1] for x in sorted(hist)]
+            return ret_dict
+        except:
+            return None
 
     def extract_phrases(self, root, extraction_dict, element):
         """
