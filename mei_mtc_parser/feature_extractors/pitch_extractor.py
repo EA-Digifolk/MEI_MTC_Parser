@@ -83,7 +83,7 @@ class PitchExtractor():
 
         return features
 
-    def get_scale(self):
+    def get_scale(self, verbose=False):
         """
         Get the scale of the piece
         """
@@ -99,15 +99,16 @@ class PitchExtractor():
             if mode.lower().startswith('aeolian'):
               return m21.key.Key(tonic=key, mode='aeolian')
             if mode.lower().startswith('phrygian'):
-              return m21.key.Key(tonic=key, mode='phrygian')       
+              return m21.key.Key(tonic=key, mode='phrygian')
 
-            print(f"Can't yet process {key} {mode.lower()}")       
+            if verbose:
+                print(f"Can't yet process {key} {mode.lower()}")
             return m21.key.Key(tonic=key, mode='major')
         except:
           try:
             return self.music_stream.analyze('key')
           except:
-            return m21.key.Key(tonic='c', mode='major')        
+            return m21.key.Key(tonic='c', mode='major')
 
     def get_m21_scale_degrees(self):
         """
