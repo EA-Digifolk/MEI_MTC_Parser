@@ -96,7 +96,7 @@ class MTCExtractor():
             try:
                 self.music_stream = self.music_stream.expandRepeats()
             except Exception as e:
-                print('Error expanding repeats in: ' + path)
+                print('\nError expanding repeats in: ' + path)
                 print(e)
                 return None
 
@@ -137,7 +137,7 @@ class MTCExtractor():
                 duration_to_shift = measure.barDuration.quarterLength * (1 - measure.barDurationProportion())
                 part.shiftElements(duration_to_shift)
         except:
-            print('Error getting measure 0')
+            print('\nError getting measure 0')
 
         features = defaultdict(list)
 
@@ -156,7 +156,7 @@ class MTCExtractor():
           features.update(PhraseExtractor(part,
                           self.metadata, features).get_all_features())
         except:
-          print('Error getting phrase information')
+          print('\nError getting phrase information', self.metadata['id'])
 
         # Derived Features
         features.update(IOIExtractor(part,
