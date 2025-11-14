@@ -155,8 +155,8 @@ class MTCExtractor():
           # Phrasic Features
           features.update(PhraseExtractor(part,
                           self.metadata, features).get_all_features())
-        except:
-          print('\nError getting phrase information', self.metadata['id'])
+        except Exception as e:
+          print('\nError getting phrase information', self.metadata['id'], e)
 
         # Derived Features
         features.update(IOIExtractor(part,
