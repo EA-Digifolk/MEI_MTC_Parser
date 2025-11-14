@@ -218,8 +218,12 @@ class MeiParser:
             if element == 'key':
                 output_dict['mode'] = self.get_element(
                     root, extraction_dict[element], 'mode')
-            if element == 'textual_topics' and isinstance(output_dict[element], str):
-                output_dict[element] = output_dict[element].split('; ')
+            if element == 'textual_topics':
+                if isinstance(output_dict[element], str):
+                    output_dict[element] = output_dict[element].split('; ')
+                else:
+                    output_dict[element] = []
+
         return output_dict
 
     def extract_patterns(self, root, extraction_dict, element):
