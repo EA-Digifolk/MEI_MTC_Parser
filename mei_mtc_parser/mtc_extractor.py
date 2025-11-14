@@ -49,16 +49,16 @@ class MTCExtractor():
         self.metadata = {}
         if musical_metadata:
             self.metadata = musical_metadata
-              
+
         expressions = list(self.music_stream.recurse().getElementsByClass('Expression'))
         for exp in expressions:
           if exp.content == '𝄋':
             exp.content = 'Segno'
           if exp.content == '𝄌':
             exp.content = 'Coda'
-          
+
           rep_exp = exp.getRepeatExpression()
-          
+
           if rep_exp is not None:
             hierch = [e for e in exp.containerHierarchy()]
             hierch[0].insert(exp.offset, rep_exp)
@@ -79,8 +79,8 @@ class MTCExtractor():
                           ending_markings = list(range(int(st), int(end)+1, 1))
                         else:
                           ending_markings = [
-                              int(i) for i in ending.attrib['n'].split(',')]
-                      
+                              int(float(i)) for i in ending.attrib['n'].split(',')]
+
                         if len(ending_markings) == 1:
                             repeat_bracket.number = ending_markings[0]
                         elif list(range(ending_markings[0], ending_markings[-1])) == ending_markings:
@@ -165,7 +165,7 @@ class MTCExtractor():
                         features).get_all_features())
         features.update(LBDMExtractor(
             part, features).get_all_features())
-        
+
         features.update({'lyrics': self.get_lyrics(part.flatten().notes)})
 
         return features
@@ -188,5 +188,5 @@ class MTCExtractor():
         Return Lyrics per Note
         """
         if not self.has_lyrics():
-            return [[] for _ in range(len(notes))] 
+            return [[] for _ in range(len(notes))]
         return [[(x.number, x.text, x.syllabic) for x in n.lyrics] for n in notes]
