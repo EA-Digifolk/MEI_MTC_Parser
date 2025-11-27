@@ -14,9 +14,9 @@ except:
 
     
 setup(
-    name="mei_mtc_parser",
+    name="MEIParser_features",
     version='0.0.1',
-    description='A package to parse MEI files into MTC Features',
+    description='A package to parse MEI files into features',
     long_description=open('README.md').read(),
     author="Nádia Carvalho",
     author_email="nadiacarvalho118@gmail.com",
